@@ -6,6 +6,7 @@ typedef struct aluno_ ALUNO;
 struct aluno_{
         char nome[30]; //String que contem o nome do aluno
         int *notas; //Vetor alocado dinamicamente com as notas dos alunos 
+        float media;
 }; 
 
 ALUNO *entradaDados(int quantidadeAlunos, int quantidadeProvas);
@@ -17,10 +18,11 @@ int main(void){
     int quantidadeAlunos, quantidadeProvas;
     scanf("%d %d\n", &quantidadeAlunos, &quantidadeProvas);
     ALUNO *alunos = entradaDados(quantidadeAlunos, quantidadeProvas);
-    if(alunos == NULL) printf("Alunos eh NULL\n");
-    imprimeTabela(alunos, quantidadeAlunos, quantidadeProvas);
+    //imprimeTabela(alunos, quantidadeAlunos, quantidadeProvas);
 
-    aluno_vetorApaga(alunos, quantidadeAlunos);
+    ALUNO *arvoreAlunos;
+
+    aluno_vetorApaga(alunos, quantidadeAlunos); //Desalocando memoria utilizada
     return 0;
 }
 
@@ -30,11 +32,14 @@ ALUNO *entradaDados(int quantidadeAlunos, int quantidadeProvas){
         exit (2);
 
     for(int i = 0; i < quantidadeAlunos; ++i){
-        scanf("%s", alunos[i].nome);
-        alunos[i].notas = (int *) malloc(sizeof(int) * quantidadeProvas);
-        for(int j = 0; j < quantidadeProvas; ++j){
+        float mediaNotas = 0; //Variavel Auxiliar
+        scanf("%s", alunos[i].nome); //Entrada do Nome
+        alunos[i].notas = (int *) malloc(sizeof(int) * quantidadeProvas); //Alocando espaco para o vetor de notas 
+        for(int j = 0; j < quantidadeProvas; ++j){ //Entrada das notas
             scanf("%d", &alunos[i].notas[j]); 
+            mediaNotas += alunos[i].notas[j];
         }
+        alunos[i].media = mediaNotas / quantidadeProvas; //Caluculando media de cada aluno
     }
        
     return alunos;
@@ -51,9 +56,10 @@ void aluno_vetorApaga(ALUNO *alunos, int quantidadeAlunos){
 void imprimeTabela(ALUNO *alunos, int quantidadeAlunos, int quantidadeProvas){
     //Imprimindo os dados de todos os alunos 
     for(int i = 0; i < quantidadeAlunos; ++i){
-        printf("%s ", alunos[i].nome);
+        printf("%s --> ", alunos[i].nome);
         for(int j = 0; j < quantidadeProvas; ++j)
             printf("%d ", alunos[i].notas[j]);
+        printf("\nMedia: %f\n", alunos[i].media);
         printf("\n");
     }
 }
